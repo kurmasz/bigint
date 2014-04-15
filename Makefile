@@ -27,14 +27,17 @@ library: $(library-objects)
 # Conservatively assume that all the objects depend on all the headers.
 $(library-objects): $(library-headers)
 
-# TESTSUITE (NOTE: Currently expects a 32-bit system)
+LBITS := $(shell getconf LONG_BIT)
+
 # Compiling the testsuite.
-testsuite.o: $(library-headers)
-testsuite: testsuite.o $(library-objects)
+testsuite$(LBITS).o: $(library-headers)
+testsuite: testsuite$(LBITS).o $(library-objects)
 	g++ $^ -o $@
 # Extract the expected output from the testsuite source.
-testsuite.expected: testsuite.cc
-	nl -ba -p -s: $< | sed -nre 's,^ +([0-9]+):.*//([^ ]),Line \1: \2,p' >$@
+
+testsuite.expected: testsuite$(LBITS).cc
+	perl -e '$$line = 1; while (<>) { print "Line $${line}: $$1\n" if /\/\/(\S+)/; $$line++;}' <$< >$@
+
 # Run the testsuite.
 .PHONY: test
 test: testsuite testsuite.expected
