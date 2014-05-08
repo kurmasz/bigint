@@ -8,6 +8,8 @@ same day.  The topmost version listed is the one you have.
 
 2014.04.14
 ----------
+(These changes by Zack Kurmas.)
+	
 - Replaced the sed script in the Makefile with a perl script.  The sed
 	script didn't work on both Linux and Mac (and there didn't appear
 	to bea good way to write a single sed script that worked for
